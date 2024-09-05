@@ -1,12 +1,12 @@
 import s from "./Options.module.css";
 
-const Options = ({ isVisible }) => {
+const Options = ({ handleUpdateFeedback, handleReset, isVisibleReset }) => {
   return (
     <div className={s.wrapper}>
-      <button className={s.btn}>Good</button>
-      <button className={s.btn}>Neutral</button>
-      <button className={s.btn}>Bad</button>
-      {isVisible && <button className={s.btn}>Reset</button>}
+      <button onClick={() => handleUpdateFeedback("good")}>Good</button>
+      <button onClick={() => handleUpdateFeedback("neutral")}>Neutral</button>
+      <button onClick={() => handleUpdateFeedback("bad")}>Bad</button>
+      {isVisibleReset && <button onClick={handleReset}>Reset</button>}
     </div>
   );
 };

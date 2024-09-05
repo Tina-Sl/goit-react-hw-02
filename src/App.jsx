@@ -2,25 +2,49 @@ import Description from "./components/Description/Description";
 import Options from "./components/Options/Options";
 import Notification from "./components/Notification/Notification";
 import Feedback from "./components/Feedback/Feedback";
-// import s from "./App.css";
 
-// import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
-  const feedbackData = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+  const [feedbacks, setFeedbacks] = useState(
+    JSON.parse(localStorage.getItem("feedback-statistics")) || {
+      good: 0,
+      neutral: 0,
+      bad: 0,
+    }
+  );
+
+  const handleUpdateFeedback = (feedbackType) => {
+    setFeedbacks((prev) => ({
+      ...prev,
+      [feedbackType]: prev[feedbackType] + 1,
+    }));
   };
 
-  return (
-    <section>
-      <Description />
-      <Options isVisible={false} />
+  const handleReset = () => {
+    setFeedbacks({
+      good: 0,
+      neutral: 0,
+      bad: 0,
+    });
+  };
 
-      <Feedback feedback={feedbackData} />
-      <Notification />
-    </section>
+  useEffect(() => {
+    localStorage.setItem("feedback-statistics", JSON.stringify(feedbacks));
+  }, [feedbacks]);
+
+  const totalFeedback = feedbacks.good + feedbacks.neutral + feedbacks.bad;
+
+  return (
+    <div>
+      <Description />
+      <Options
+        handleUpdateFeedback={handleUpdateFeedback}
+        handleReset={handleReset}
+        isVisibleReset={totalFeedback > 0}
+      />
+      {totalFeedback > 0 ? <Feedback feedback={feedbacks} /> : <Notification />}
+    </div>
   );
 }
 
